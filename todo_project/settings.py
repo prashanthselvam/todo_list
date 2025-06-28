@@ -14,9 +14,12 @@ import os
 from pathlib import Path
 from decouple import Config, Csv, RepositoryEnv
 
-ENVIRONMENT = os.getenv("ENVIRONMENT", "dev")
+PROD = "prod"
+DEV = "dev"
 
-if ENVIRONMENT == "prod":
+ENVIRONMENT = os.getenv("ENVIRONMENT", DEV)
+
+if ENVIRONMENT == PROD:
     config = Config(RepositoryEnv("/opt/todo_list/.env.prod"))
 else:
     config = Config(RepositoryEnv(".env.dev"))
@@ -81,7 +84,7 @@ WSGI_APPLICATION = "todo_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if ENVIRONMENT == "PROD":
+if ENVIRONMENT == PROD:
     DATABASES = {
         "default": {
             "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
