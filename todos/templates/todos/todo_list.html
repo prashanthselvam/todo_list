@@ -2,38 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'todos/style.css' %}">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 2em; }
-        .completed { text-decoration: line-through; color: #888; }
-        form.inline { display: inline; }
-    </style>
 </head>
 <body>
-    <h1>Todo List</h1>
-    <form method="post" action="" style="margin-bottom: 1em;">
-        {% csrf_token %}
-        <input type="text" name="text" placeholder="Add a new todo" required>
-        <button type="submit">Add</button>
-    </form>
-    <ul>
-        {% for todo in todos %}
-            <li>
-                <form method="post" action="{% url 'toggle_todo' todo.id %}" class="inline">
-                    {% csrf_token %}
-                    <button type="submit">{% if todo.completed %}Undo{% else %}Done{% endif %}</button>
-                </form>
-                <span class="{% if todo.completed %}completed{% endif %}">{{ todo.text }}</span>
-                <form method="post" action="{% url 'delete_todo' todo.id %}" class="inline">
-                    {% csrf_token %}
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
-        {% empty %}
-            <li>No todos yet!</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Todo List</h1>
+            <p class="subtitle">Stay organized and productive</p>
+        </header>
+        
+        <main class="main-content">
+            <form method="post" action="" class="add-form">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="text" placeholder="What needs to be done?" required class="todo-input">
+                    <button type="submit" class="add-btn">Add</button>
+                </div>
+            </form>
+            
+            <div class="todo-list-container">
+                {% if todos %}
+                    <ul class="todo-list">
+                        {% for todo in todos %}
+                            <li class="todo-item {% if todo.completed %}completed{% endif %}">
+                                <div class="todo-content">
+                                    <form method="post" action="{% url 'toggle_todo' todo.id %}" class="toggle-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="toggle-btn {% if todo.completed %}completed{% endif %}">
+                                            {% if todo.completed %}✓{% else %}○{% endif %}
+                                        </button>
+                                    </form>
+                                    <span class="todo-text">{{ todo.text }}</span>
+                                </div>
+                                <form method="post" action="{% url 'delete_todo' todo.id %}" class="delete-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-btn">×</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <p class="empty-text">No todos yet!</p>
+                        <p class="empty-subtext">Add your first todo to get started</p>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
 </body>
 </html> 
