@@ -45,8 +45,16 @@ LOGGING = {
             "format": "{asctime} [{levelname}] {name} - {message}",
             "style": "{",
         },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
     },
     "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
         "file_info": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -62,13 +70,17 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["file_info", "file_error"],
-            "level": "INFO",
+            "handlers": (
+                ["console"] if ENVIRONMENT == "dev" else ["file_info", "file_error"]
+            ),
+            "level": "INFO" if ENVIRONMENT == "dev" else "INFO",
             "propagate": True,
         },
-        "todos": {  # app-specific logger
-            "handlers": ["file_info", "file_error"],
-            "level": "INFO",
+        "todos": {
+            "handlers": (
+                ["console"] if ENVIRONMENT == "dev" else ["file_info", "file_error"]
+            ),
+            "level": "INFO" if ENVIRONMENT == "dev" else "INFO",
             "propagate": False,
         },
     },
