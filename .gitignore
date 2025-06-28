@@ -24,3 +24,6 @@ Thumbs.db
 
 # Staticfiles
 staticfiles/
+
+# Production Stuff - Files which are on prod server that I don't want tracked
+deploy.sh
