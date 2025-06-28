@@ -24,8 +24,16 @@ if ENVIRONMENT == PROD:
 else:
     config = Config(RepositoryEnv(".env.dev"))
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Logging stuff
-LOG_DIR = "/var/log/todo_list"
+if ENVIRONMENT == "prod":
+    LOG_DIR = "/var/log/todo_list"
+else:
+    LOG_DIR = os.path.join(BASE_DIR, "logs")
+    os.makedirs(LOG_DIR, exist_ok=True)
+
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
@@ -65,9 +73,6 @@ LOGGING = {
         },
     },
 }
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production

@@ -1,5 +1,8 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Todo
+
+logger = logging.getLogger("todos")
 
 # Create your views here.
 
@@ -7,6 +10,8 @@ from .models import Todo
 
 
 def todo_list(request):
+    logger.info("This is an info log")
+    logger.error("This is an error log")
     if request.method == "POST":
         text = request.POST.get("text")
         if text:
