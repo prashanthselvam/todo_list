@@ -24,6 +24,48 @@ if ENVIRONMENT == PROD:
 else:
     config = Config(RepositoryEnv(".env.dev"))
 
+# Logging stuff
+LOG_DIR = "/var/log/todo_list"
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,  # Keep Django’s default logging
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} [{levelname}] {name} - {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "app.log"),
+            "formatter": "verbose",
+        },
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOG_DIR, "error.log"),
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file_info", "file_error"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "todos": {  # app-specific logger
+            "handlers": ["file_info", "file_error"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
